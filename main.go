@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
-
 	"github.com/ingemar-fei/gator/internal/commands"
 	"github.com/ingemar-fei/gator/internal/config"
+	_ "github.com/lib/pq"
+	"log"
+	"os"
 )
 
 func main() {
