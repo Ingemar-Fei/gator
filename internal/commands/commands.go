@@ -1,11 +1,13 @@
 package commands
 
 import (
-	"errors"
+	"fmt"
 	"github.com/ingemar-fei/gator/internal/config"
+	"github.com/ingemar-fei/gator/internal/database"
 )
 
 type State struct {
+	DB  *database.Queries
 	Cfg *config.Config
 }
 
@@ -25,7 +27,7 @@ func (cb *CommandBook) Register(name string, f func(*State, Command) error) {
 func (cb *CommandBook) Run(s *State, cmd Command) error {
 	f, ok := cb.ValidCommand[cmd.Name]
 	if !ok {
-		return errors.New("Unknown Command")
+		return fmt.Errorf("unknown command")
 	}
 	return f(s, cmd)
 }

@@ -1,12 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"github.com/ingemar-fei/gator/internal/commands"
-	"github.com/ingemar-fei/gator/internal/config"
-	_ "github.com/lib/pq"
 	"log"
 	"os"
+
+	"github.com/ingemar-fei/gator/internal/commands"
+	"github.com/ingemar-fei/gator/internal/config"
+	"github.com/ingemar-fei/gator/internal/database"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -14,12 +17,20 @@ func main() {
 	if err != nil {
 		log.Fatalf("error reading congfig : %v", err)
 	}
+	db, err := sql.Open("postgres", cfg.DBURL)
+	if err != nil {
+		log.Fatalf("error opening db : %v", err)
+	}
+	defer db.Close()
+	dbQueries := database.New(db)
 	programState := &commands.State{
 		Cfg: &cfg,
+		DB:  dbQueries,
 	}
 	cmdBook := commands.CommandBook{
 		ValidCommand: make(map[string]func(*commands.State, commands.Command) error),
 	}
+	cmdBook.Register("register", commands.UserRegister)
 	cmdBook.Register("login", commands.UserLogin)
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: gator <command> [args]")
