@@ -9,10 +9,10 @@ import (
 
 type Config struct {
 	DBUrl       string `json:"db_url"`
-	CurUserName string `json:"current_user_name`
+	CurUserName string `json:"current_user_name"`
 }
 
-const configFileName = ".gatorconfig"
+const configFileName = ".gatorconfig.json"
 const configDirName = "gator"
 
 func (cfg *Config) SetUser(username string) error {
