@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
-
 	"github.com/ingemar-fei/gator/internal/command"
 	"github.com/ingemar-fei/gator/internal/config"
+	"log"
+	"os"
 )
 
 func main() {
@@ -18,7 +16,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("user init: %v\n", runState.CFG.CurUserName)
+	DebugMessage("--- read success ---\nuser: [%v]\ndburl: [%v]\n--------------------\n", runState.CFG.CurUserName, runState.CFG.DBUrl)
 	if len(os.Args) < 3 {
 		log.Fatal("not enough arguments were provided.")
 	}
