@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/ingemar-fei/gator/internal/command"
 	"github.com/ingemar-fei/gator/internal/config"
+	_ "github.com/lib/pq"
 	"log"
 	"os"
 )
