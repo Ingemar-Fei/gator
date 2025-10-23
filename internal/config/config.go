@@ -17,8 +17,14 @@ const configDirName = "gator"
 
 func (cfg *Config) SetUser(username string) error {
 	cfg.CurUserName = username
-	return write(*cfg)
+	err := write(*cfg)
+	if err != nil {
+		return fmt.Errorf("switch user: %v", err)
+	}
+	fmt.Printf("switched to user %v\n", username)
+	return nil
 }
+
 func getConfigFilePath() (string, error) {
 	homePath, err := os.UserHomeDir()
 	if err != nil {
@@ -44,6 +50,10 @@ func write(cfg Config) error {
 		return fmt.Errorf("error encoding config : %v", err)
 	}
 	return nil
+}
+
+func PrintConfig(cfg *Config) {
+	fmt.Printf("--- config  info ---\n # user: [%v]\n # dburl: [%v]\n--------------------\n", cfg.CurUserName, cfg.DBUrl)
 }
 
 func Read() (Config, error) {

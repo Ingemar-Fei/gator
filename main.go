@@ -1,8 +1,11 @@
 package main
 
 import (
+	"database/sql"
 	"github.com/ingemar-fei/gator/internal/command"
 	"github.com/ingemar-fei/gator/internal/config"
+	"github.com/ingemar-fei/gator/internal/database"
+	"github.com/ingemar-fei/gator/internal/util"
 	_ "github.com/lib/pq"
 	"log"
 	"os"
@@ -11,19 +14,31 @@ import (
 func main() {
 	var err error
 	coms := command.ComBook{}
-	coms.Register("Login", command.HandlerLogin)
-	runState := command.State{}
-	runState.CFG, err = config.Read()
+	coms.Register("login", command.HandlerLogin)
+	coms.Register("register", command.HandlerRegister)
+	cfg, err := config.Read()
 	if err != nil {
 		log.Fatal(err)
 	}
-	DebugMessage("--- read success ---\nuser: [%v]\ndburl: [%v]\n--------------------\n", runState.CFG.CurUserName, runState.CFG.DBUrl)
+	if util.DebugMode() {
+		config.PrintConfig(&cfg)
+	}
+	db, err := sql.Open("postgres", cfg.DBUrl)
+	if err != nil {
+		log.Fatalf("connect database failed : %v", err)
+	}
+	defer db.Close()
+	queries := database.New(db)
+	runState := &command.State{
+		DBQueries: queries,
+		CFG:       &cfg,
+	}
 	if len(os.Args) < 3 {
 		log.Fatal("not enough arguments were provided.")
 	}
 	comName := os.Args[1]
 	comArgs := os.Args[2:]
-	err = coms.Run(&runState, command.Com{
+	err = coms.Run(runState, command.Com{
 		Name: comName,
 		Args: comArgs,
 	})
