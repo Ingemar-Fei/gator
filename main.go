@@ -16,6 +16,8 @@ func main() {
 	coms := command.ComBook{}
 	coms.Register("login", command.HandlerLogin)
 	coms.Register("register", command.HandlerRegister)
+	coms.Register("reset", command.ResetUsersHandler)
+	coms.Register("users", command.ListUsersHandler)
 	cfg, err := config.Read()
 	if err != nil {
 		log.Fatal(err)
@@ -33,7 +35,7 @@ func main() {
 		DBQueries: queries,
 		CFG:       &cfg,
 	}
-	if len(os.Args) < 3 {
+	if len(os.Args) < 2 {
 		log.Fatal("not enough arguments were provided.")
 	}
 	comName := os.Args[1]

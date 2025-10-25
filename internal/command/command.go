@@ -95,3 +95,34 @@ func HandlerRegister(s *State, cmd Com) error {
 	}
 	return nil
 }
+
+func ResetUsersHandler(s *State, cmd Com) error {
+	if util.DebugMode() {
+		fmt.Printf("------\n # reseting users\n-----\n")
+	}
+	err := s.DBQueries.ResetUsers(context.Background())
+	if err != nil {
+		return err
+	}
+	if util.DebugMode() {
+		fmt.Printf("------\n # users reseted\n-----\n")
+	}
+	return nil
+}
+
+func ListUsersHandler(s *State, cmd Com) error {
+	if util.DebugMode() {
+		fmt.Printf("-----\n # list users:\n\n")
+	}
+	users, err := s.DBQueries.ListUsers(context.Background())
+	if err != nil {
+		return err
+	}
+	for i, user := range users {
+		if user == s.CFG.CurUserName {
+			user += " (current)"
+		}
+		fmt.Printf(" # %v - %v\n", i, user)
+	}
+	return nil
+}
