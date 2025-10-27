@@ -10,6 +10,7 @@ import (
 type Config struct {
 	DBUrl       string `json:"db_url"`
 	CurUserName string `json:"current_user_name"`
+	RSSUrl      string `json:"rss_url"`
 }
 
 const configFileName = ".gatorconfig.json"

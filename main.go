@@ -18,6 +18,7 @@ func main() {
 	coms.Register("register", command.HandlerRegister)
 	coms.Register("reset", command.ResetUsersHandler)
 	coms.Register("users", command.ListUsersHandler)
+	coms.Register("agg", command.RSSFetchHandler)
 	cfg, err := config.Read()
 	if err != nil {
 		log.Fatal(err)

@@ -3,12 +3,12 @@ package command
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/ingemar-fei/gator/internal/config"
 	"github.com/ingemar-fei/gator/internal/database"
+	"github.com/ingemar-fei/gator/internal/rss"
 	"github.com/ingemar-fei/gator/internal/util"
+	"time"
 )
 
 type State struct {
@@ -124,5 +124,17 @@ func ListUsersHandler(s *State, cmd Com) error {
 		}
 		fmt.Printf(" # %v - %v\n", i, user)
 	}
+	return nil
+}
+
+func RSSFetchHandler(s *State, cmd Com) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	res, err := rss.FetchFeed(ctx, s.CFG.RSSUrl)
+	if err != nil {
+		return err
+	}
+	// TODO: do with the res
+	fmt.Printf("%v\n", res)
 	return nil
 }
