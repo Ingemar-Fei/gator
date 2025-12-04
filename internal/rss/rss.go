@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
-	"github.com/ingemar-fei/gator/internal/util"
+	"html"
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/ingemar-fei/gator/internal/util"
 )
 
 type RSSFeed struct {
@@ -63,6 +65,11 @@ func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 	// 7. 使用解析结果
 	if util.DebugMode() {
 		fmt.Printf("Parsed XML: %+v\n", result)
+	}
+	result.Channel.Title = html.UnescapeString(result.Channel.Title)
+	for k, v := range result.Channel.Item {
+		result.Channel.Item[k].Title = html.UnescapeString(v.Title)
+		result.Channel.Item[k].Description = html.UnescapeString(v.Description)
 	}
 
 	return &result, nil
